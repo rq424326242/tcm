@@ -303,7 +303,6 @@ public class KnowledgeController {
 					knowledge
 							.setFigure(ExcelUtil.getCellValue(row.getCell(32)));
 					km.insert(knowledge);
-					// km.insertSelective(knowledge);
 				}
 			}
 		} catch (Exception e) {

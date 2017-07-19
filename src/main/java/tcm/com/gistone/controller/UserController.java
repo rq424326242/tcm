@@ -1,7 +1,22 @@
 package tcm.com.gistone.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import tcm.com.gistone.database.entity.User;
+import tcm.com.gistone.database.mapper.UserMapper;
+import tcm.com.gistone.util.ClientUtil;
+import tcm.com.gistone.util.EdatResult;
+import tcm.com.gistone.util.RegUtil;
 
 /**
  * 用户控制类
@@ -13,7 +28,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping
 public class UserController {
+	@Autowired
+	UserMapper um;
+	@RequestMapping(value = "user/createUser", method = RequestMethod.POST)
+	public EdatResult createUser(HttpServletRequest request,
+								   HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			if(null!=data.getString("userName")){
 
+			}
+			String userName = data.getString("userName");
+			String password = data.getString("password");
+			int level = data.getInt("level");
+
+			String regEx = "^[a-zA-Z]+[a-zA-Z0-9_]{5,14}$";
+			if(RegUtil.CheckParameter(userName,"String",regEx,false)){
+				return EdatResult.build(1, "账号格式不正确");
+			}
+			User user = new User();
+			user.setUserName(userName);
+			user.setUserPwd(password);
+			user.setUserType(level);
+			um.insert(user);
+			return EdatResult.build(1, "创建成功");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(0, "fail");
+		}
+	}
 	// @Autowired
 	// public TUserMapper tUserMapper;
 

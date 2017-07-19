@@ -1,17 +1,26 @@
 package tcm.com.gistone.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import tcm.com.gistone.database.entity.Section;
 import tcm.com.gistone.database.entity.Theme;
 import tcm.com.gistone.database.entity.Word;
 import tcm.com.gistone.database.entity.WsRelation;
-import tcm.com.gistone.database.mapper.*;
-
-import java.util.Date;
-import java.util.List;
+import tcm.com.gistone.database.mapper.BookinfoMapper;
+import tcm.com.gistone.database.mapper.DirectoryMapper;
+import tcm.com.gistone.database.mapper.KnowledgeMapper;
+import tcm.com.gistone.database.mapper.SectionMapper;
+import tcm.com.gistone.database.mapper.SpecialBookMapper;
+import tcm.com.gistone.database.mapper.ThemeMapper;
+import tcm.com.gistone.database.mapper.WordMapper;
+import tcm.com.gistone.database.mapper.WordRelationMapper;
+import tcm.com.gistone.database.mapper.WsRelationMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

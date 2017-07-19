@@ -1,6 +1,16 @@
 package tcm.com.gistone.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,18 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import tcm.com.gistone.database.config.GetBySqlMapper;
 import tcm.com.gistone.database.entity.Theme;
 import tcm.com.gistone.database.entity.Word;
-import tcm.com.gistone.database.mapper.*;
+import tcm.com.gistone.database.mapper.ThemeMapper;
+import tcm.com.gistone.database.mapper.WordMapper;
+import tcm.com.gistone.database.mapper.WordRelationMapper;
+import tcm.com.gistone.database.mapper.WsRelationMapper;
 import tcm.com.gistone.util.ClientUtil;
 import tcm.com.gistone.util.EdatResult;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by qiang on 2017/7/14.
@@ -44,10 +48,9 @@ public class TopoController {
 	public EdatResult getRelationWithBookId(HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
-			// ClientUtil.SetCharsetAndHeader(request, response);
-			// Map<String, Object> data = (Map)
-			// requestDate.get("data");@RequestBody Map<String, Object>
-			// requestDate,
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
 			String type = "zf";
 			String keyWord = "甘草";
 			long bookId = 1;

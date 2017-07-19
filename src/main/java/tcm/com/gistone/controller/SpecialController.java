@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tcm.com.gistone.database.config.GetBySqlMapper;
-import tcm.com.gistone.database.entity.Special;
-import tcm.com.gistone.database.entity.Theme;
 import tcm.com.gistone.database.mapper.SpecialMapper;
-import tcm.com.gistone.database.mapper.ThemeMapper;
 import tcm.com.gistone.util.ClientUtil;
 import tcm.com.gistone.util.EdatResult;
 

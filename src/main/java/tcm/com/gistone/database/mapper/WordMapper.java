@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import tcm.com.gistone.database.entity.Word;
+
 @Mapper
 public interface WordMapper {
     int deleteByPrimaryKey(Long wordId);

@@ -29,6 +29,8 @@ public class Bookinfo {
 
     private String notes;
 
+    private Double price;
+
     public Long getBookId() {
         return bookId;
     }
@@ -139,5 +141,13 @@ public class Bookinfo {
 
     public void setNotes(String notes) {
         this.notes = notes == null ? null : notes.trim();
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

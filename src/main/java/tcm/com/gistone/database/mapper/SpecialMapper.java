@@ -1,12 +1,11 @@
 package tcm.com.gistone.database.mapper;
 
 import tcm.com.gistone.database.entity.Special;
-import tcm.com.gistone.database.entity.SpecialBook;
 
 public interface SpecialMapper {
     int deleteByPrimaryKey(Long specialId);
 
-    int insert(SpecialBook sb);
+    int insert(Special record);
 
     int insertSelective(Special record);
 
@@ -15,5 +14,4 @@ public interface SpecialMapper {
     int updateByPrimaryKeySelective(Special record);
 
     int updateByPrimaryKey(Special record);
-
 }

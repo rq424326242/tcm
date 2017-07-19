@@ -4,13 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -21,7 +26,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -183,7 +187,8 @@ public class BookController implements Serializable {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			long bookId = Long.parseLong(data.get("bookId").toString());
+
+			long bookId = data.getLong("bookId");
 			// long bookId=1;
 			Bookinfo bookinfo = bim.selectByPrimaryKey(bookId);
 			Map map = new HashMap();
@@ -203,7 +208,7 @@ public class BookController implements Serializable {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			long bookId = Long.parseLong(data.get("bookId").toString());
+			long bookId = data.getLong("bookId");
 			List<Directory> list = dm.selectByBookId(bookId);
 			/*
 			 * for(Directory tem:list){
@@ -227,7 +232,7 @@ public class BookController implements Serializable {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			long bookId = Long.parseLong(data.get("bookId").toString());
+			long bookId = data.getLong("bookId");
 			String str = "";
 			List<Section> list = sm.selectByBookId(bookId);
 			for (Section sec : list) {
