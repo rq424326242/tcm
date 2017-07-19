@@ -70,11 +70,11 @@ public class KnowledgeController {
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
 			km.deleteByPrimaryKey(data.getLong("id"));
-			return EdatResult.build(1, "success");
+			return EdatResult.build(0, "success");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 	@RequestMapping(value = "knowledge/updateKnowledge", method = RequestMethod.POST)
@@ -132,11 +132,11 @@ public class KnowledgeController {
 			knowledge
 					.setFigure(data.getString("figure"));
 			km.updateByPrimaryKey(knowledge);
-			return EdatResult.build(1, "success");
+			return EdatResult.build(0, "success");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 		
 	}
@@ -199,11 +199,11 @@ public class KnowledgeController {
 			knowledge
 					.setFigure(data.getString("figure"));
 			km.insert(knowledge);
-			return EdatResult.build(1, "success");
+			return EdatResult.build(0, "success");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 	
@@ -218,11 +218,11 @@ public class KnowledgeController {
 			Map knowledge=selectByName(name);
 			Map map = new HashMap();
 			map.put("data",knowledge);
-			return EdatResult.build(1, "success",map);
+			return EdatResult.build(0, "success",map);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 

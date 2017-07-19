@@ -1,10 +1,14 @@
 package tcm.com.gistone.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import tcm.com.gistone.database.config.GetBySqlMapper;
 import tcm.com.gistone.database.entity.User;
 import tcm.com.gistone.database.mapper.UserMapper;
 import tcm.com.gistone.util.ClientUtil;
@@ -29,7 +34,9 @@ import tcm.com.gistone.util.RegUtil;
 @RequestMapping
 public class UserController {
 	@Autowired
-	UserMapper um;
+	UserMapper userMapper;
+	@Autowired
+	GetBySqlMapper gm;
 	@RequestMapping(value = "user/createUser", method = RequestMethod.POST)
 	public EdatResult createUser(HttpServletRequest request,
 								   HttpServletResponse response) {
@@ -52,13 +59,121 @@ public class UserController {
 			user.setUserName(userName);
 			user.setUserPwd(password);
 			user.setUserType(level);
-			um.insert(user);
-			return EdatResult.build(1, "创建成功");
+			userMapper.insert(user);
+			return EdatResult.build(0, "创建成功");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
+	}
+
+	@RequestMapping(value = "user/updateUser", method = RequestMethod.POST)
+	public EdatResult updateteUser(HttpServletRequest request,
+								 HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			long userId = data.getLong("userId");
+			String userName = data.getString("userName");
+			String password = data.getString("password");
+			int level = data.getInt("level");
+			User user = new User();
+			user.setUserId(userId);
+			user.setUserType(level);
+			user.setUserName(userName);
+			user.setUserPwd(password);
+			userMapper.updateByPrimaryKey(user);
+			return EdatResult.build(0, "success");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(1, "fail");
+		}
+		
+	}
+	
+	@RequestMapping(value = "user/getAllUser", method = RequestMethod.POST)
+	public EdatResult getAllUser(HttpServletRequest request,
+									  HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			String sql = "select * from tb_user";
+			List<Map> result = new ArrayList<>();
+			result = gm.findRecords(sql);
+			return EdatResult.build(0, "success",result);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(1, "fail");
+		}
+
+	}
+	@RequestMapping(value = "user/getUserByType", method = RequestMethod.POST)
+	public EdatResult getUserByType(HttpServletRequest request,
+								 HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			int type = data.getInt("type");
+			String sql = "select user_name from tb_user where user_type = "+ type;
+			List<Map> result = new ArrayList<>();
+			result = gm.findRecords(sql);
+			return EdatResult.build(0, "success",result);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(1, "fail");
+		}
+
+	}
+
+	@RequestMapping(value = "user/deleteUser", method = RequestMethod.POST)
+	public EdatResult deleteUser(HttpServletRequest request,
+								 HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			JSONArray userIds=data.getJSONArray("userIds");
+			for(int i=0;i<userIds.size();i++){
+				long id =  userIds.getLong(i);
+				String sql="update tb_user set status = 0 where user_id = "+ id;
+				gm.update(sql);
+			}
+			return EdatResult.ok();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(1, "fail");
+		}
+
+	}
+	
+	@RequestMapping(value = "user/recoverUser", method = RequestMethod.POST)
+	public EdatResult recoverUser(HttpServletRequest request,
+								 HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));
+			JSONArray userIds=data.getJSONArray("userIds");
+			for(int i=0;i<userIds.size();i++){
+				long id =  userIds.getLong(i);
+				String sql="update tb_user set status = 1 where user_id = "+ id;
+				gm.update(sql);
+			}
+			return EdatResult.ok();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return EdatResult.build(1, "fail");
+		}
+
 	}
 	// @Autowired
 	// public TUserMapper tUserMapper;

@@ -72,12 +72,12 @@ public class WordController {
 				}
 			} else {
 				wm.insert(nw);
-				return EdatResult.build(1, "录入成功");
+				return EdatResult.build(0, "录入成功");
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 
@@ -90,10 +90,10 @@ public class WordController {
 					.getParameter("data"));
 			long wordId = data.getLong("wordId");
 			wm.deleteByPrimaryKey(wordId);
-			return EdatResult.build(1, "删除成功");
+			return EdatResult.build(0, "删除成功");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 
@@ -110,10 +110,10 @@ public class WordController {
 			Map map = new HashMap();
 			map.put("data", list);
 			map.put("num", list.size());
-			return EdatResult.build(1, "success");
+			return EdatResult.build(0, "success");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 

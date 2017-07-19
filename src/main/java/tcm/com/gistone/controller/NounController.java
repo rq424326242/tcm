@@ -32,12 +32,12 @@ public class NounController {
 
             Map map = new HashMap();
 
-            return EdatResult.build(1, "success", map);
+            return EdatResult.build(0, "success", map);
 
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return EdatResult.build(0, "fail");
+            return EdatResult.build(1, "fail");
         }
     }
     @RequestMapping(value="noun/getNoun",method = RequestMethod.POST)
@@ -49,12 +49,12 @@ public class NounController {
 
             Map map = new HashMap();
 
-            return EdatResult.build(1, "success", map);
+            return EdatResult.build(0, "success", map);
 
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return EdatResult.build(0, "fail");
+            return EdatResult.build(1, "fail");
         }
     }
 	

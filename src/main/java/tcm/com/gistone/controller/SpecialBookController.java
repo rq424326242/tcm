@@ -41,11 +41,11 @@ public class SpecialBookController {
             result = gm.findRecords(sql);
             Map map = new HashMap();
             map.put("data", result);
-            return EdatResult.build(1, "success", map);
+            return EdatResult.build(0, "success", map);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return EdatResult.build(0, "fail");
+            return EdatResult.build(1, "fail");
         }
     }
 }

@@ -35,11 +35,11 @@ public class ThemeController {
             List<Theme> themes = tm.selectAll();
             Map map = new HashMap();
             map.put("data", themes);
-            return EdatResult.build(1, "success", map);
+            return EdatResult.build(0, "success", map);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return EdatResult.build(0, "fail");
+            return EdatResult.build(1, "fail");
         }
     }
     @RequestMapping(value = "knowledge/addTheme", method = RequestMethod.POST)
@@ -52,11 +52,11 @@ public class ThemeController {
             List<Theme> themes = tm.selectAll();
             Map map = new HashMap();
             map.put("data", themes);
-            return EdatResult.build(1, "success", map);
+            return EdatResult.build(0, "success", map);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return EdatResult.build(0, "fail");
+            return EdatResult.build(1, "fail");
         }
     }
 

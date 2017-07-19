@@ -212,7 +212,7 @@ public class BookController implements Serializable {
 			List<Directory> list = dm.selectByBookId(bookId);
 			/*
 			 * for(Directory tem:list){
-			 * 
+			 *
 			 * }
 			 */
 			Map map = new HashMap();

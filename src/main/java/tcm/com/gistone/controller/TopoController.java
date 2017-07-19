@@ -74,10 +74,10 @@ public class TopoController {
 				map.put("type", (String) tem.get("word_type"));
 				list.add(map);
 			}
-			return EdatResult.build(1, "success", list);
+			return EdatResult.build(0, "success", list);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 
@@ -123,10 +123,10 @@ public class TopoController {
 				list.add(map1);
 			}
 			map.put("datas", list);
-			return EdatResult.build(1, "success", map);
+			return EdatResult.build(0, "success", map);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return EdatResult.build(2, "fail");
+			return EdatResult.build(1, "fail");
 		}
 	}
 
@@ -167,10 +167,10 @@ public class TopoController {
 					}
 				}
 			}
-			return EdatResult.build(1, "success", result);
+			return EdatResult.build(0, "success", result);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return EdatResult.build(0, "fail");
+			return EdatResult.build(1, "fail");
 		}
 
 	}
@@ -211,7 +211,7 @@ public class TopoController {
 			List<Map> result = new ArrayList<>();
 			String sql = "SELECT  count(word_num)as total ,section_id as sectionId  FROM demo.tb_ws_relation where word_id = 711 group by section_id order by total desc limit 5;";
 			result = gm.findRecords(sql);
-			return EdatResult.build(1, "", result);
+			return EdatResult.ok( result);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -234,7 +234,7 @@ public class TopoController {
 					+ ")a join (SELECT * FROM demo.tb_ws_relation where word_id= "
 					+ wordId2 + " )b on a.section_id = b.section_id limit 5 ;";
 			result = gm.findRecords(sql);
-			return EdatResult.build(1, "", result);
+			return EdatResult.ok(result);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
