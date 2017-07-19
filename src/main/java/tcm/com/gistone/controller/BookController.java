@@ -194,7 +194,7 @@ public class BookController implements Serializable {
 			Map map = new HashMap();
 			map.put("data", bookinfo);
 			return EdatResult.build(1, "success", map);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(0, "fail");
@@ -218,7 +218,7 @@ public class BookController implements Serializable {
 			Map map = new HashMap();
 			map.put("datas", list);
 			return EdatResult.build(1, "success", map);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(0, "fail");
@@ -242,7 +242,7 @@ public class BookController implements Serializable {
 			map.put("data", str);
 			return EdatResult.build(1, "查询成功", map);
 
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(0, "查询失败");

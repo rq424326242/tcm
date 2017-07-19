@@ -42,7 +42,7 @@ public class SpecialBookController {
             Map map = new HashMap();
             map.put("data", result);
             return EdatResult.build(0, "success", map);
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return EdatResult.build(1, "fail");

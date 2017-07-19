@@ -61,7 +61,7 @@ public class UserController {
 			user.setUserType(level);
 			userMapper.insert(user);
 			return EdatResult.build(0, "创建成功");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -86,7 +86,7 @@ public class UserController {
 			user.setUserPwd(password);
 			userMapper.updateByPrimaryKey(user);
 			return EdatResult.build(0, "success");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -101,11 +101,11 @@ public class UserController {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			String sql = "select * from tb_user";
+			String sql = "select * from tb_user status != 0";
 			List<Map> result = new ArrayList<>();
 			result = gm.findRecords(sql);
 			return EdatResult.build(0, "success",result);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -120,11 +120,11 @@ public class UserController {
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
 			int type = data.getInt("type");
-			String sql = "select user_name from tb_user where user_type = "+ type;
+			String sql = "select user_name from tb_user where status!=0 and user_type = "+ type;
 			List<Map> result = new ArrayList<>();
 			result = gm.findRecords(sql);
 			return EdatResult.build(0, "success",result);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -146,7 +146,7 @@ public class UserController {
 				gm.update(sql);
 			}
 			return EdatResult.ok();
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -168,7 +168,7 @@ public class UserController {
 				gm.update(sql);
 			}
 			return EdatResult.ok();
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");

@@ -71,7 +71,7 @@ public class KnowledgeController {
 					.getParameter("data"));
 			km.deleteByPrimaryKey(data.getLong("id"));
 			return EdatResult.build(0, "success");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -133,7 +133,7 @@ public class KnowledgeController {
 					.setFigure(data.getString("figure"));
 			km.updateByPrimaryKey(knowledge);
 			return EdatResult.build(0, "success");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -200,7 +200,7 @@ public class KnowledgeController {
 					.setFigure(data.getString("figure"));
 			km.insert(knowledge);
 			return EdatResult.build(0, "success");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
@@ -219,7 +219,7 @@ public class KnowledgeController {
 			Map map = new HashMap();
 			map.put("data",knowledge);
 			return EdatResult.build(0, "success",map);
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");

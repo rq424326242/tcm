@@ -39,7 +39,7 @@ public class SpecialController {
             Map map = new HashMap();
             map.put("data", specials);
             return EdatResult.build(0, "success", map);
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return EdatResult.build(1, "fail");
