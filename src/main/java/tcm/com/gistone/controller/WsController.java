@@ -44,7 +44,7 @@ public class WsController {
 	@Autowired
 	private ThemeMapper tm;
 
-	public void getWsRelation() {
+	public void getWsRelationWithhBook() {
 		Long t1 = new Date().getTime();
 		List<Theme> themes = tm.selectAll();
 		Long id = (long) 2;
@@ -58,6 +58,7 @@ public class WsController {
 				Long tid = section.getSectionId();
 				for (Word word : words) {
 					String k = word.getWord();
+					String alias=word.getAlias();
 					Long kid = word.getWordId();
 					int f = 0;
 					f = text.indexOf(k);
@@ -65,6 +66,16 @@ public class WsController {
 					while (f != -1) {
 						num++;
 						f = text.indexOf(k, f + 1);
+					}
+					String[] arry=alias.split(",");
+					for (int i=0;i<arry.length;i++){
+						int flag=0;
+						String tem=arry[i];
+						flag=text.indexOf(tem);
+						while(flag!=-1){
+							num++;
+							flag=text.indexOf(tem,flag+1);
+						}
 					}
 					if (num > 0) {
 						WsRelation wsRelation = new WsRelation();

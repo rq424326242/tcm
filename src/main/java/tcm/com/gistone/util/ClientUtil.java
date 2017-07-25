@@ -40,9 +40,11 @@ public class ClientUtil {
 	 */
 	public static void SetCharsetAndHeader(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
 		request.setCharacterEncoding("utf-8");
-		response.setContentType("text/html;charset=utf-8");
+		//response.setContentType("text/json;charset=utf-8");
 		//设置跨域
 		response.setHeader("Access-Control-Allow-Origin", "*");
+		/*response.setHeader("Access-Control-Allow-Headers", "*");
+		response.setHeader("Access-Control-Request-Method","*");*/
 	}
 	
 	

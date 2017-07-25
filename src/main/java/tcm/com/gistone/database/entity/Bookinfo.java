@@ -31,6 +31,8 @@ public class Bookinfo {
 
     private Double price;
 
+    private String imageUrl;
+
     public Long getBookId() {
         return bookId;
     }
@@ -149,5 +151,13 @@ public class Bookinfo {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl == null ? null : imageUrl.trim();
     }
 }

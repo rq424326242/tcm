@@ -1,27 +1,22 @@
 package tcm.com.gistone.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import tcm.com.gistone.database.config.GetBySqlMapper;
 import tcm.com.gistone.database.entity.User;
 import tcm.com.gistone.database.mapper.UserMapper;
 import tcm.com.gistone.util.ClientUtil;
 import tcm.com.gistone.util.EdatResult;
-import tcm.com.gistone.util.RegUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 用户控制类
@@ -37,30 +32,54 @@ public class UserController {
 	UserMapper userMapper;
 	@Autowired
 	GetBySqlMapper gm;
+	@ResponseBody
 	@RequestMapping(value = "user/createUser", method = RequestMethod.POST)
 	public EdatResult createUser(HttpServletRequest request,
 								   HttpServletResponse response) {
 		try {
 			ClientUtil.SetCharsetAndHeader(request, response);
+			System.out.println(request
+					.getParameter("data"));
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			if(null!=data.getString("userName")){
-
-			}
-			String userName = data.getString("userName");
-			String password = data.getString("password");
-			int level = data.getInt("level");
-
-			String regEx = "^[a-zA-Z]+[a-zA-Z0-9_]{5,14}$";
-			if(RegUtil.CheckParameter(userName,"String",regEx,false)){
+		/*	String regEx = "^[a-zA-Z]+[a-zA-Z0-9_]{5,14}$";
+			if(RegUtil.CheckParameter(userName,"String",regEx,falsse)){
 				return EdatResult.build(1, "账号格式不正确");
+			}*/
+			String loginName = data.getString("loginName");
+			if(null==loginName||loginName.length()<6){
+				return EdatResult.build(1,"请输入正确格式的登录名");
 			}
+			String sql = "select * from tb_user where login_name = " + loginName;
+			List<Map> result = new ArrayList<>();
+			result = gm.findRecords(sql);
+			if(result.size()>0){
+				return EdatResult.build(1,"登录名重复");
+			}
+
+			String userName = data.getString("userName");
+			//	String password = data.getString("password");
+			String tel = data.getString("tel");
+			String mail = data.getString("mail");
+			Date d = new Date();
+			System.out.println(d);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String dateNowStr = sdf.format(d);
+			if(null == userName || userName == ""){
+				return EdatResult.build(1,"请输入正确格式的用户名");
+			}
+			int level = data.getInt("level");
 			User user = new User();
-			user.setUserName(userName);
-			user.setUserPwd(password);
+			user.setLoginName(loginName);
 			user.setUserType(level);
+			user.setUserName(userName);
+			user.setUserPwd("123456");
+			user.setTel(tel);
+			user.setEmail(mail);
+			user.setCreateTime(dateNowStr);
+			user.setStatus(1);
 			userMapper.insert(user);
-			return EdatResult.build(0, "创建成功");
+			return EdatResult.ok();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,15 +94,23 @@ public class UserController {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			long userId = data.getLong("userId");
+			//String id =  UUID.randomUUID().toString();
+			String loginName = data.getString("loginName");
+			long id=data.getLong("id");
+			int per=data.getInt("per");
 			String userName = data.getString("userName");
-			String password = data.getString("password");
-			int level = data.getInt("level");
+		//	String password = data.getString("password");
+			String tel = data.getString("tel");
+			String email = data.getString("email");
 			User user = new User();
-			user.setUserId(userId);
-			user.setUserType(level);
+			user.setId(id);
+			user.setLoginName(loginName);
+			user.setUserType(per);
 			user.setUserName(userName);
-			user.setUserPwd(password);
+			user.setUserPwd("123456");
+			user.setTel(tel);
+			user.setEmail(email);
+			//user.setStatus(1);
 			userMapper.updateByPrimaryKey(user);
 			return EdatResult.build(0, "success");
 		} catch (Exception e) {
@@ -93,22 +120,34 @@ public class UserController {
 		}
 		
 	}
-	
-	@RequestMapping(value = "user/getAllUser", method = RequestMethod.POST)
-	public EdatResult getAllUser(HttpServletRequest request,
+	@ResponseBody
+	@RequestMapping("user/getAllUser")
+	public Map getAllUser(HttpServletRequest request,
 									  HttpServletResponse response) {
 		try {
 			ClientUtil.SetCharsetAndHeader(request, response);
-			JSONObject data = JSONObject.fromObject(request
-					.getParameter("data"));
-			String sql = "select * from tb_user status != 0";
+			int pageNumber=Integer.parseInt(request
+					.getParameter("pageNumber"));
+			int pageSize=Integer.parseInt(request
+					.getParameter("pageSize"));
+			String keyWord = request.getParameter("keyWord");
+		/*	JSONObject data = JSONObject.fromObject(request
+					.getParameter("data"));*/
+			String sql = "select id,login_name, user_name,tel,email,user_type,create_time,permi_time from tb_user where status != 0 and user_name like '%"+keyWord+"%' limit "+pageNumber+","+pageSize ;
 			List<Map> result = new ArrayList<>();
 			result = gm.findRecords(sql);
-			return EdatResult.build(0, "success",result);
+			String sql1 = "select count(*) as total from tb_user where status != 0";
+			int total= gm.findrows(sql1);
+			//List<Map> list = new ArrayList<>();
+			Map map = new HashMap();
+			map.put("total",total);
+			map.put("rows",result);
+			map.put("page",pageNumber/pageSize);
+			return map;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return EdatResult.build(1, "fail");
+			return null;
 		}
 
 	}
@@ -139,10 +178,10 @@ public class UserController {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			JSONArray userIds=data.getJSONArray("userIds");
-			for(int i=0;i<userIds.size();i++){
-				long id =  userIds.getLong(i);
-				String sql="update tb_user set status = 0 where user_id = "+ id;
+			JSONArray array=data.getJSONArray("userId");
+			for(int i=0;i<array.size();i++){
+				long userId = array.getLong(i);
+				String sql="update tb_user set status = 0 where id = "+ userId;
 				gm.update(sql);
 			}
 			return EdatResult.ok();

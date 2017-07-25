@@ -15,6 +15,10 @@ public class Section {
 
     private String imageUrl;
 
+    private Integer startPos;
+
+    private Integer endPos;
+
     public Long getSectionId() {
         return sectionId;
     }
@@ -69,5 +73,21 @@ public class Section {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl == null ? null : imageUrl.trim();
+    }
+
+    public Integer getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(Integer startPos) {
+        this.startPos = startPos;
+    }
+
+    public Integer getEndPos() {
+        return endPos;
+    }
+
+    public void setEndPos(Integer endPos) {
+        this.endPos = endPos;
     }
 }

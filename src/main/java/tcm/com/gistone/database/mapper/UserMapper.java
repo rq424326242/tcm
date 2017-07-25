@@ -1,7 +1,7 @@
 package tcm.com.gistone.database.mapper;
 
-import tcm.com.gistone.database.entity.User;
 
+import tcm.com.gistone.database.entity.User;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long userId);

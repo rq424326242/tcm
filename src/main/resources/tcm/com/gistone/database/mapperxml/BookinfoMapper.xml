@@ -16,10 +16,12 @@
     <result column="finish_year" property="finishYear" jdbcType="VARCHAR" />
     <result column="copy_state" property="copyState" jdbcType="VARCHAR" />
     <result column="notes" property="notes" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     book_id, book_name, appose_name, section, author, type, book_version, location, book_abstract, 
-    feature, dynasty, finish_year, copy_state, notes
+    feature, dynasty, finish_year, copy_state, notes, price, image_url
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -36,12 +38,14 @@
       section, author, type, 
       book_version, location, book_abstract, 
       feature, dynasty, finish_year, 
-      copy_state, notes)
+      copy_state, notes, price, 
+      image_url)
     values (#{bookId,jdbcType=BIGINT}, #{bookName,jdbcType=VARCHAR}, #{apposeName,jdbcType=VARCHAR}, 
       #{section,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
       #{bookVersion,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, #{bookAbstract,jdbcType=VARCHAR}, 
       #{feature,jdbcType=VARCHAR}, #{dynasty,jdbcType=VARCHAR}, #{finishYear,jdbcType=VARCHAR}, 
-      #{copyState,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR})
+      #{copyState,jdbcType=VARCHAR}, #{notes,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{imageUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="tcm.com.gistone.database.entity.Bookinfo" >
     insert into tb_bookinfo
@@ -88,6 +92,12 @@
       <if test="notes != null" >
         notes,
       </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="imageUrl != null" >
+        image_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="bookId != null" >
@@ -131,6 +141,12 @@
       </if>
       <if test="notes != null" >
         #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="imageUrl != null" >
+        #{imageUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -176,6 +192,12 @@
       <if test="notes != null" >
         notes = #{notes,jdbcType=VARCHAR},
       </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="imageUrl != null" >
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where book_id = #{bookId,jdbcType=BIGINT}
   </update>
@@ -193,7 +215,9 @@
       dynasty = #{dynasty,jdbcType=VARCHAR},
       finish_year = #{finishYear,jdbcType=VARCHAR},
       copy_state = #{copyState,jdbcType=VARCHAR},
-      notes = #{notes,jdbcType=VARCHAR}
+      notes = #{notes,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      image_url = #{imageUrl,jdbcType=VARCHAR}
     where book_id = #{bookId,jdbcType=BIGINT}
   </update>
 </mapper>

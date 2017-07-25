@@ -54,7 +54,6 @@ public class UserBookController {
             e.printStackTrace();
             return EdatResult.build(1, "fail");
         }
-
     }
 
     @RequestMapping(value = "userBook/getBookByUser", method = RequestMethod.POST)

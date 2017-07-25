@@ -2,6 +2,7 @@ package tcm.com.gistone.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,8 +20,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tcm.com.gistone.database.config.GetBySqlMapper;
 import tcm.com.gistone.database.entity.Section;
 import tcm.com.gistone.database.entity.Word;
 import tcm.com.gistone.database.entity.WordRelation;
@@ -47,7 +51,10 @@ public class WordController {
 	private WordRelationMapper wrm;
 	@Autowired
 	private ThemeMapper tm;
+	@Autowired
+	GetBySqlMapper gm;
 
+	@ResponseBody
 	@RequestMapping(value = "/word/recordWord", method = RequestMethod.POST)
 	public EdatResult recordWord(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -55,16 +62,17 @@ public class WordController {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			String word = "";
-			long parentId = 1;
-			String themeType = "";
+			String word = data.getString("word");
+			String alias = data.getString("alias");
+			String wordType = data.getString("wordType");
 			Word w = wm.selectByWord(word);
 			Word nw = new Word();
-			nw.setParentId(parentId);
-			nw.setThemeType(themeType);
+			//nw.setParentId();
+			nw.setThemeType(wordType);
 			nw.setWord(word);
+			nw.setAlias(alias);
 			if (w != null) {
-				if (w.getThemeType().equals(themeType)) {
+				if (w.getThemeType().equals(wordType)) {
 					return EdatResult.build(0, "录入失败，关键词重复");
 				} else {
 					wm.insert(nw);
@@ -80,7 +88,7 @@ public class WordController {
 			return EdatResult.build(1, "fail");
 		}
 	}
-
+	@ResponseBody
 	@RequestMapping(value = "/word/deleteWord", method = RequestMethod.POST)
 	public EdatResult deleteWord(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -88,32 +96,68 @@ public class WordController {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			long wordId = data.getLong("wordId");
-			wm.deleteByPrimaryKey(wordId);
+			JSONArray array = data.getJSONArray("wordIds");
+			for(int i=0;i<array.size();i++){
+				long wordId = array.getLong(i);
+				wm.deleteByPrimaryKey(wordId);
+			}
 			return EdatResult.build(0, "删除成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
 		}
 	}
-
-	@RequestMapping(value = "/word/selectWord", method = RequestMethod.POST)
-	public EdatResult selectWord(HttpServletRequest request,
-			HttpServletResponse response) {
+	@ResponseBody
+	@RequestMapping(value = "/word/updateWord", method = RequestMethod.POST)
+	public EdatResult updateWord(HttpServletRequest request,
+								 HttpServletResponse response) {
 		try {
 			ClientUtil.SetCharsetAndHeader(request, response);
 			JSONObject data = JSONObject.fromObject(request
 					.getParameter("data"));
-			String themeType = data.getString("themeType");
+			long wordId = data.getLong("id");
 			String word = data.getString("word");
-			List<Word> list = wm.selectByType(themeType);
-			Map map = new HashMap();
-			map.put("data", list);
-			map.put("num", list.size());
-			return EdatResult.build(0, "success");
+			String alias = data.getString("alias");
+			String wordType = data.getString("wordType");
+			Word word1=new Word();
+			word1.setWord(word);
+			word1.setWordId(wordId);
+			word1.setThemeType(wordType);
+			word1.setAlias(alias);
+			wm.updateByPrimaryKeySelective(word1);
+			return EdatResult.build(0, "删除成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return EdatResult.build(1, "fail");
+		}
+	}
+	@ResponseBody
+	@RequestMapping(value = "/word/selectWord", method = RequestMethod.POST)
+	public Map selectWord(HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			ClientUtil.SetCharsetAndHeader(request, response);
+			ClientUtil.SetCharsetAndHeader(request, response);
+			int pageNumber=Integer.parseInt(request
+					.getParameter("pageNumber"));
+			int pageSize=Integer.parseInt(request
+					.getParameter("pageSize"));
+			String keyWord = request.getParameter("keyWord");
+
+			String sql = "select word_id as id,theme_type,word,alias from tb_word where word like '%"+keyWord+"%'or alias like  '%"+keyWord+"%' limit "+pageNumber+","+pageSize ;
+			List<Map> result = new ArrayList<>();
+			result = gm.findRecords(sql);
+			String sql1 = "select count(*) as total from tb_word where word like '%"+keyWord+"%'or alias like  '%"+keyWord+"%'";
+			int total= gm.findrows(sql1);
+			//List<Map> list = new ArrayList<>();
+			Map map = new HashMap();
+			map.put("total",total);
+			map.put("rows",result);
+			map.put("page",pageNumber/pageSize);
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 

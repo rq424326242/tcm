@@ -50,7 +50,7 @@ import tcm.com.gistone.util.LogUtil;
 
 @RestController
 @RequestMapping
-public class BookController implements Serializable {
+public class BookController  {
 	@Autowired
 	private SectionMapper sm;
 	@Autowired
@@ -72,34 +72,6 @@ public class BookController implements Serializable {
 	@Autowired
 	BookinfoMapper bim;
 
-
-
-	@RequestMapping(value = "/user/get_sessionInfo", method = RequestMethod.POST)
-	public EdatResult get_sessionInfo(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		try {
-			// 设置跨域
-			ClientUtil.SetCharsetAndHeader(request, response);
-			HttpSession session = request.getSession();
-			// 验证session不为空
-			if (session.getAttribute("user") != null) {
-				// 取出用户信息
-				@SuppressWarnings("unchecked")
-				Map<String, String> userInfo = (Map<String, String>) session
-						.getAttribute("user");
-				LogUtil.getLogger().info("UserController  获取Session成功！");
-				// 将信息添加到结果集
-				return EdatResult.ok(userInfo);
-			} else {
-				LogUtil.getLogger().error("UserController  没有Session信息!");
-				return EdatResult.build(1002, "没有Session信息!");
-			}
-		} catch (Exception e) {
-			LogUtil.getLogger().error("UserController 获取Session异常！", e);
-			return EdatResult.build(1001, "获取Session异常!");
-		}
-
-	}
 
 	@RequestMapping(value = "/book/recordBook", method = RequestMethod.POST)
 	public EdatResult recordBookinfo(HttpServletRequest request,
@@ -250,7 +222,9 @@ public class BookController implements Serializable {
 	}
 
 	@RequestMapping(value = "book/recordSection", method = RequestMethod.POST)
-	public void recordSection(Long id) throws IOException {
+	public void recordSection(HttpServletRequest request,
+							  HttpServletResponse response) throws IOException {
+		long id = 1;
 		// String file_dir = "D:/zydata/饮膳正要-全文.xlsx";
 		String file_dir = "D:/中医古籍/中医古籍知识库-示例数据/示例数据/本草便读/全文数据-1024本草便读.xlsx";
 		Workbook book = null;
@@ -259,6 +233,8 @@ public class BookController implements Serializable {
 			Sheet sheet = book.getSheetAt(0);
 			int firstRowNum = sheet.getFirstRowNum();
 			int lastRowNum = sheet.getLastRowNum();
+			int startPos=0;
+			int endPos=0;
 			// 循环除了第一行的所有行
 			for (int rowNum = firstRowNum + 1; rowNum <= lastRowNum; rowNum++) {
 				// 获得当前行
@@ -267,16 +243,23 @@ public class BookController implements Serializable {
 						|| ExcelUtil.getCellValue(row.getCell(0)) == "") {
 					continue;
 				} else {
+					String content=ExcelUtil
+							.getCellValue(row.getCell(2));
+					int len=content.length();
+					endPos+=len;
 					Section sec = new Section();
 					// 循环当前行
+
 					sec.setBookId(id);
-					sec.setSectionContent(ExcelUtil
-							.getCellValue(row.getCell(2)).trim());
+					sec.setSectionContent(content);
 					sec.setSectionType(ExcelUtil.getCellValue(row.getCell(0))
 							.split("<")[1].split(">")[0].trim());
 					sec.setSectionTitle(ExcelUtil.getCellValue(row.getCell(1))
 							.trim());
+					sec.setStartPos(startPos);
+					sec.setEndPos(endPos);
 					sm.insert(sec);
+					startPos=endPos+1;
 				}
 			}
 		} catch (Exception e) {
@@ -471,4 +454,7 @@ public class BookController implements Serializable {
 		long t2 = System.currentTimeMillis();
 		System.out.println(t2 - t1);
 	}
+
+
+
 }
